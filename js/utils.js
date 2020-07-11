@@ -3,6 +3,10 @@ const authForm = document.getElementById('authForm')
 const authFormTitle = document.getElementById('authFormTitle')
 const register = document.getElementById('register')
 const access = document.getElementById('access')
+const loading = document.getElementById('loading')
+const auth = document.getElementById('auth')
+const userContent = document.getElementById('userContent')
+const userEmail = document.getElementById('userEmail')
 
 // Alterar formulario de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -28,4 +32,15 @@ function showItem(element) {
 // Simplifica a execução de elementos da página
 function hideItem(element) {
   element.style.display = 'none'
+}
+
+function showUserContent(user) {
+  userEmail.innerHTML = user.email
+  hideItem(auth)
+  showItem(userContent)
+}
+
+function showAuth() {
+  hideItem(userContent)
+  showItem(auth)
 }
