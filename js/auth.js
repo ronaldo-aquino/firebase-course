@@ -106,3 +106,13 @@ const sendPasswordResetEmail = () => {
     alert('É preciso preencher o campo de e-mail para redefinir sua senha.')
   }
 }
+
+const signInWithGoogle = () => {
+  showItem(loading)
+  firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+    .catch(e => {
+      alert('Houve um erro ao autenticar com o google')
+      console.log(e)
+      hideItem(loading)
+    })
+}
