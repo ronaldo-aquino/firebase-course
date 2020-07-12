@@ -102,6 +102,7 @@ const sendPasswordResetEmail = () => {
       }).finally(() => {
         hideItem(loading)
       })
+  } else {
+    alert('É preciso preencher o campo de e-mail para redefinir sua senha.')
   }
-  return alert('É preciso preencher o campo de e-mail para redefinir sua senha.')
 }
