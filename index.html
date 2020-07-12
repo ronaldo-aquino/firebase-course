@@ -33,6 +33,12 @@
         <button type="submit" id="submitAuthForm">Acessar</button>
       </form>
 
+      <!-- Possibilita a redefinição de senha -->
+      <p id="passwordReset">
+        Esqueceu sua senha?
+        <button onclick="sendPasswordResetEmail()" class="alternative">Redefinir minha senha</button>
+      </p>
+
       <!-- Alternar o formulário de autenticação para o cadastro de novas contas -->
       <p id="register">
         Não possui uma conta?
@@ -51,6 +57,10 @@
       <hr>
       <div id="userInfo" class="center">
         <p id="userEmail"></p>
+        <p id="emailVerified"></p>
+        <div id="sendEmailVerificationDiv">
+          <button class="alternative" onclick="sendEmailVification()">Virificar e-mail</button>
+        </div>
         <button class="alternative" onclick="signOut()">Sair</button>
       </div>
     </div>
