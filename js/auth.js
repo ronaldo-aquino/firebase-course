@@ -126,3 +126,32 @@ const signInWithGithub = () => {
       hideItem(loading)
     })
 }
+
+const signInWithFacebook = () => {
+  showItem(loading)
+  firebase.auth().signInWithRedirect(new firebase.auth.FacebookAuthProvider())
+    .catch(e => {
+      alert('Houve um erro ao autenticar com o facebook')
+      console.log(e)
+      hideItem(loading)
+    })
+}
+
+const updateUserName = () => {
+  const user = firebase.auth().currentUser;
+  const newUserName = prompt('Informe um novo nome de usuário.', userName.innerHTML)
+  if(newUserName && newUserName !== '') {
+    userName.innerHTML = newUserName
+    showItem(loading)
+    user.updateProfile({
+      displayName: newUserName
+    }).catch(e => {
+      alert('Houve um erro ao atualizar seu nome')
+      console.lof(e)
+    }).finally(() => {
+      hideItem(loading)
+    })
+  } else {
+    alert('O nome de usuário não pode ser vazio.')
+  }
+}
