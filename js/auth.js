@@ -116,3 +116,13 @@ const signInWithGoogle = () => {
       hideItem(loading)
     })
 }
+
+const signInWithGithub = () => {
+  showItem(loading)
+  firebase.auth().signInWithRedirect(new firebase.auth.GithubAuthProvider())
+    .catch(e => {
+      alert('Houve um erro ao autenticar com o github')
+      console.log(e)
+      hideItem(loading)
+    })
+}

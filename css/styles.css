@@ -76,7 +76,7 @@ p {
   margin: 4px;
 }
 
-button:hover {
+#auth img:hover {
   opacity: .75;
 }
 
