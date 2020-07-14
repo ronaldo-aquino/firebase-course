@@ -70,7 +70,7 @@ function showAuth() {
 }
 
 const actionCodeSettings = {
-  url: 'http://127.0.0.1:5500/index.html'
+  url: 'https://todolist-f0d5d.firebaseapp.com'
 }
 
 const showError = (prefix, error) => {
