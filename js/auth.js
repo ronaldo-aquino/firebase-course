@@ -12,18 +12,13 @@ authForm.onsubmit = event => {
 const loginUser = () => {
   return (
     firebase.auth().createUserWithEmailAndPassword(authForm.email.value, authForm.password.value)
-    .then(user => {
+    .then(() => {
       console.log('Cadastrou com sucesso')
-      console.log(user)
       authForm.email.value = ''
       authForm.password.value = ''
     })
     .catch(error => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('Falha no cadastro', errorCode)
-      console.log('Mensagem de erro', errorMessage)
+      showError('Falha no acesso', error)
     })
   )
 }
@@ -31,20 +26,14 @@ const loginUser = () => {
 const createUser = () => {
   return (
     firebase.auth().signInWithEmailAndPassword(authForm.email.value, authForm.password.value)
-    .then(user => {
+    .then(() => {
       console.log('Acessou com sucesso')
-      console.log(user)
       authForm.email.value = ''
       authForm.password.value = ''
       hideItem(loading)
     })
     .catch(error => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('Falha no acesso', errorCode)
-      console.log('Mensagem de erro', errorMessage)
-      hideItem(loading)
+      showError('Falha no cadastro', error)
     })
   )
 }
@@ -64,10 +53,7 @@ const signOut = () => {
     .then(function() {
 
   }).catch(function(error) {
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log('Falha no sair da conta', errorCode)
-    console.log('Mensagem de erro', errorMessage)
+    showError('Falha no sair da conta', error)
   });
 }
 
@@ -78,10 +64,7 @@ const sendEmailVification= () => {
     .then(() => {
       alert(`Email de verificação foi enviado para ${user.email}`)
     }).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('Falha na verificação', errorCode)
-      console.log('Mensagem de erro', errorMessage)
+      showError('Falha ao enviar mensagem de verificação de e-mail', error)
   }).finally(() => {
     hideItem(loading)
   })
@@ -95,10 +78,7 @@ const sendPasswordResetEmail = () => {
       .then(() => {
         alert(`Email de redefinição de senha foi enviado para ${email}.`)
       }).catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log('Falha na verificação', errorCode)
-        console.log('Mensagem de erro', errorMessage)
+        showError('Falha ao enviar e-mail de redefinição de senha', error)
       }).finally(() => {
         hideItem(loading)
       })
@@ -110,30 +90,24 @@ const sendPasswordResetEmail = () => {
 const signInWithGoogle = () => {
   showItem(loading)
   firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-    .catch(e => {
-      alert('Houve um erro ao autenticar com o google')
-      console.log(e)
-      hideItem(loading)
+    .catch(error => {
+      showError('Houve um erro ao autenticar com o google', error)
     })
 }
 
 const signInWithGithub = () => {
   showItem(loading)
   firebase.auth().signInWithRedirect(new firebase.auth.GithubAuthProvider())
-    .catch(e => {
-      alert('Houve um erro ao autenticar com o github')
-      console.log(e)
-      hideItem(loading)
+    .catch(error => {
+      showError('Houve um erro ao autenticar com o github', error)
     })
 }
 
 const signInWithFacebook = () => {
   showItem(loading)
   firebase.auth().signInWithRedirect(new firebase.auth.FacebookAuthProvider())
-    .catch(e => {
-      alert('Houve um erro ao autenticar com o facebook')
-      console.log(e)
-      hideItem(loading)
+    .catch(error => {
+      showError('Houve um erro ao autenticar com o facebook', error)
     })
 }
 
@@ -145,9 +119,8 @@ const updateUserName = () => {
     showItem(loading)
     user.updateProfile({
       displayName: newUserName
-    }).catch(e => {
-      alert('Houve um erro ao atualizar seu nome')
-      console.lof(e)
+    }).catch(error => {
+      showError('Houve um erro ao atualizar seu nome', error)
     }).finally(() => {
       hideItem(loading)
     })
@@ -163,8 +136,8 @@ const deleteUserAccount = () => {
     const user = firebase.auth().currentUser
     user.delete().then(() => {
       alert('Conta Excluida Com Sucesso!')
-    }).catch(e => {
-      console.log('Houve um erro ao excluir sua conta.', e)
+    }).catch(error => {
+      showError('Houve um erro ao excluir sua conta.', error)
     }).finally(() => {
       hideItem(loading)
     })

@@ -72,3 +72,30 @@ function showAuth() {
 const actionCodeSettings = {
   url: 'http://127.0.0.1:5500/index.html'
 }
+
+const showError = (prefix, error) => {
+  console.log(error.code)
+  hideItem(loading)
+
+  switch(error.code) {
+    case 'auth/invalid-email': 
+      alert(`${prefix} E-mail ou senha inválidos`)
+      break;
+
+    case 'auth/wrong-password':
+      alert(`${prefix} E-mail ou senha inválidos`)
+      break;
+
+    case 'auth/weak-password':
+      alert(`${prefix} Senha deve ter ao menos 6 caracteres`)
+      break;
+
+    case 'auth/email-already-in-use':
+      alert(`${prefix} E-mail já cadastrado`)
+      break;
+
+    default: alert(`${prefix} ${error.message}`)
+
+  }
+
+}
