@@ -88,3 +88,24 @@ p {
   height: 40px;
   border-radius: 100%;
 }
+
+ul {
+  list-style-type: none;
+  padding: 4px;
+}
+
+li {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li:hover {
+  background-color: #ddd;
+}
+
+.todoBtn {
+  margin-left: 4px;
+}
