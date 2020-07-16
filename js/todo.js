@@ -38,6 +38,12 @@ const fillTodoList = dataSnapshot => {
     liRemoveBtn.setAttribute('class', 'danger todoBtn')
     li.appendChild(liRemoveBtn)
 
+    const liUpdateBtn = document.createElement('button')
+    liUpdateBtn.appendChild(document.createTextNode('Editar'))
+    liUpdateBtn.setAttribute('onclick', 'updateTodo(\"' + item.key + '\")')
+    liUpdateBtn.setAttribute('class', 'alternative todoBtn')
+    li.appendChild(liUpdateBtn)
+
     ulTodoList.appendChild(li)
   })
 }
@@ -50,5 +56,24 @@ const removeTodo = key => {
       .catch(error => {
         showError(`Falha ao remover tarefa : ${error}`)
     })
+  }
+}
+
+const updateTodo = key => {
+  const selectedItem = document.getElementById(key)
+  const newTodoName = prompt(`Escolha um novo nome para a tarefa "${selectedItem.innerHTML}"`)
+  if(newTodoName !== '' && newTodoName !== null) {
+    const data = {
+      name: newTodoName
+    }
+
+    dbRefUsers.child(firebase.auth().currentUser.uid).child(key).update(data)
+      .then(() => {
+        console.log(`Tarefa ${data.name} atualizado com sucesso`)
+      }).catch(error => {
+        showError(`Falha ao atualizar tarefa : ${error}`)
+      })
+  } else {
+    alert('O nome da tarefa não pode ser em branco para atualizar a tarefa.')
   }
 }
