@@ -3,7 +3,8 @@ todoForm.onsubmit = event => {
   
   if(todoForm.name.value !== '') {
     const data = {
-      name: todoForm.name.value
+      name: todoForm.name.value,
+      nameLowerCase: todoForm.name.value.toLowerCase()
     }
     dbRefUsers.child(firebase.auth().currentUser.uid).push(data)
       .then(() => {
@@ -64,7 +65,8 @@ const updateTodo = key => {
   const newTodoName = prompt(`Escolha um novo nome para a tarefa "${selectedItem.innerHTML}"`)
   if(newTodoName !== '' && newTodoName !== null) {
     const data = {
-      name: newTodoName
+      name: newTodoName,
+      nameLowerCase: newTodoName.toLowerCase()
     }
 
     dbRefUsers.child(firebase.auth().currentUser.uid).child(key).update(data)

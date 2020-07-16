@@ -15,6 +15,7 @@ const userName = document.getElementById('userName')
 const todoForm = document.getElementById('todoForm')
 const todoCount = document.getElementById('todoCount')
 const ulTodoList = document.getElementById('ulTodoList')
+const search = document.getElementById('search')
 
 // Alterar formulario de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -64,11 +65,32 @@ function showUserContent(user) {
   userEmail.innerHTML = user.email
   hideItem(auth)
 
-  dbRefUsers.child(firebase.auth().currentUser.uid).on('value', dataSnapshot => {
-    fillTodoList(dataSnapshot)
-  })
+  getDefaultTodolist()
+  search.onkeyup = () => {
+    if(search.value !== '') {
+      const searchText = search.value.toLowerCase()
+      dbRefUsers.child(user.uid)
+      .orderByChild('nameLowerCase')
+      .startAt(searchText)
+      .endAt(searchText + '\uf8ff')
+      .once('value').then(dataSnapshot => {
+        fillTodoList(dataSnapshot)
+      })
+    } else {
+      getDefaultTodolist()
+    }
+  }
 
   showItem(userContent)
+}
+
+// Busca tarefa em tempo real no banco de dados (listagem padrão)
+const getDefaultTodolist = () => {
+  dbRefUsers.child(firebase.auth().currentUser.uid)
+  .orderByChild('name')
+  .on('value', dataSnapshot => {
+    fillTodoList(dataSnapshot)
+  })
 }
 
 function showAuth() {
