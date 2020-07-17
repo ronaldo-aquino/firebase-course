@@ -1,7 +1,23 @@
 todoForm.onsubmit = event => {
-  event.preventDefault()
+  event.preventDefault() 
   
   if(todoForm.name.value !== '') {
+
+    const file = todoForm.file.files[0]
+
+    if(file !== null) {
+      if(file.type.includes('image')) {
+        const userAtual = firebase.auth().currentUser.uid
+        const imgName = `${firebase.database().ref().push().key}-${file.name}` // Concatenar
+        const imgPath = `todoListFiles /${userAtual}/${imgName}`
+
+        const storageRef = firebase.storage().ref(imgPath)
+
+        storageRef.put(file)
+
+      }
+    }
+
     const data = {
       name: todoForm.name.value,
       nameLowerCase: todoForm.name.value.toLowerCase()
