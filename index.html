@@ -104,6 +104,11 @@
           <button type="submit" id="submitTodoForm">Adicionar Tarefa</button>
         </form>
 
+        <div id="cancelUpdateTodo" class="startHidden">
+          <button onclick="confirmTodoUpdate()">Confirmar modificação</button>
+          <button class="alternative" onclick="resetTodoForm()">Cancelar modificação</button>
+        </div>
+
         <div id="progressFeedback" class="startHidden">
           <progress max="100" id="progress"></progress>
           <button id="playPauseBtn" class="alternative">

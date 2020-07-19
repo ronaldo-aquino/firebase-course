@@ -20,6 +20,9 @@ const progressFeedback = document.getElementById('progressFeedback')
 const progress = document.getElementById('progress')
 const playPauseBtn = document.getElementById('playPauseBtn')
 const cancelBtn = document.getElementById('cancelBtn')
+const cancelUpdateTodo = document.getElementById('cancelUpdateTodo')
+const todoFormTitle = document.getElementById('todoFormTitle')
+const submitTodoForm = document.getElementById('submitTodoForm')
 
 // Alterar formulario de autenticação para o cadastro de novas contas
 function toggleToRegister() {
