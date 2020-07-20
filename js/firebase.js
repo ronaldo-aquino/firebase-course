@@ -1,5 +1,5 @@
 // Your web app's Firebase configuration
-const firebaseConfig = {
+var firebaseConfig = {
   apiKey: "AIzaSyBdSoVQeHa7eYBoWLGv6lifXeioTfmClKs",
   authDomain: "todolist-f0d5d.firebaseapp.com",
   databaseURL: "https://todolist-f0d5d.firebaseio.com",

@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>TodoList</title>
-  <link rel="shortcut icon" href="./img/todoListFavicon.png" type="image/x-icon">
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="shortcut icon" href="img/todoListFavicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body onload="observerUser()">
+<body>
   <div id="app">
-    <!-- Logotipo TodoList -->
+    <!--Logotipo do TodoList-->
     <div class="center">
-      <img src="./img/todoList.png">
+      <img src="img/todoList.png">
     </div>
 
-    <!-- Feedback de carregamento (Loading) -->
+    <!--Feedback de carregamento (loading)-->
     <div id="loading">
-      <img src="./img/loading.gif" alt="Animação loading">
+      <img src="img/loading.gif" alt="Animação de carregamento">
     </div>
 
-    <!-- Conteúdo destinado para usuários não autenticados -->
+    <!--Conteúdo destinado para usuários não autenticados-->
     <div id="auth" class="center">
-      <!-- Formulário de autenticação -->
+      <!--Formulário de autenticação-->
       <form id="authForm">
         <h3 id="authFormTitle">Acesse a sua conta para continuar</h3>
 
@@ -33,34 +33,34 @@
         <button type="submit" id="submitAuthForm">Acessar</button>
       </form>
 
-      <!-- Possibilita a redefinição de senha -->
+      <!--Possibilita a redefiniação de senha-->
       <p id="passwordReset">
-        Esqueceu sua senha?
-        <button onclick="sendPasswordResetEmail()" class="alternative">Redefinir minha senha</button>
+        Esqueceu a senha?
+        <button class="alternative" onclick="sendPasswordResetEmail()">Redefinir minha senha</button>
       </p>
 
-      <!-- Alternar o formulário de autenticação para o cadastro de novas contas -->
+      <!--Alternar o fomulário de autenticação para o cadastro de novas contas-->
       <p id="register">
         Não possui uma conta?
         <button onclick="toggleToRegister()" class="alternative">Cadastrar uma nova conta</button>
       </p>
 
-      <!-- Alternar o formulário de autenticação para o acesso de contas já existentes -->
+      <!--Alternar o fomulário de autenticação para o acesso de contas já existentes-->
       <p id="access" class="startHidden">
         Já possui uma conta?
         <button onclick="toggleToAccess()" class="alternative">Acesse a sua conta</button>
       </p>
 
+      <!--Outros provedores de autenticação-->
       <p>
-        Ou acesse usando:<br />
-        <img src="./img/google.png" alt="Login com Google" onclick="signInWithGoogle()">
-        <img src="./img/github.png" alt="Login com Github" onclick="signInWithGithub()">
-        <img src="./img/facebook.png" alt="Login com Facebook" onclick="signInWithFacebook()">
+        Ou acesse usando:<br>
+        <img src="img/google.png" alt="Autenticação pelo Google" onclick="signInWithGoogle()">
+        <img src="img/github.png" alt="Autenticação pelo GitHub" onclick="signInWithGitHub()">
+        <img src="img/facebook.png" alt="Autenticação pelo Facebook" onclick="signInWithFacebook()">
       </p>
-
     </div>
 
-    <!-- Conteúdo exclusivo para usuários logados -->
+    <!--Conteúdo destinado para usuários autenticados-->
     <div id="userContent" class="startHidden">
       <hr>
       <div id="userInfo" class="center">
@@ -69,71 +69,64 @@
         <p id="userEmail"></p>
         <p id="emailVerified"></p>
         <div id="sendEmailVerificationDiv">
-          <button class="alternative" onclick="sendEmailVification()">Virificar e-mail</button>
+          <button class="alternative" onclick="sendEmailVerification()">Verificar e-mail</button>
         </div>
-        <button class="alternative" onclick="updateUserName()">Atualizar meu nome.</button>
+        <button class="alternative" onclick="updateUserName()">Atualizar meu nome</button>
         <button class="alternative" onclick="signOut()">Sair</button>
-        <button class="danger" onclick="deleteUserAccount()">Deletar Conta</button>
+        <button class="danger" onclick="deleteUserAccount()">Excluir minha conta</button>
       </div>
 
-      <hr />
+      <hr>
 
-      <!-- Lista de tarefas do usuário -->
+      <!--Lista de tarefas do usuário-->
       <div id="todoList">
         <h3 id="todoCount">Carregando tarefas...</h3>
         <div class="center">
           <label for="search">Buscar: </label>
-          <input type="text" id="search" placeholder="Buscar">
+          <input type="text" placeholder="Buscar" id="search">
         </div>
-        <ul id="ulTodoList">
-
-        </ul>
+        <ul id="ulTodoList"></ul>
       </div>
 
-      <hr />
+      <hr>
 
       <div class="center">
-        <!-- Formulário de tarefa -->
+        <!--Formulário de tarefas-->
         <form id="todoForm">
-          <h3 id="todoFormTitle">Adicionar Tarefa:</h3>
+          <h3 id="todoFormTitle">Adicionar tarefa:</h3>
           <label for="name">Tarefa: </label>
           <input type="text" id="name" placeholder="Tarefa">
 
           <label for="file">Figura: </label>
           <input type="file" id="file" accept="image/*">
-          <button type="submit" id="submitTodoForm">Adicionar Tarefa</button>
+          <button type="submit" id="submitTodoForm">Adicionar tarefa</button>
         </form>
 
         <div id="cancelUpdateTodo" class="startHidden">
-          <button onclick="confirmTodoUpdate()">Confirmar modificação</button>
+          <button onclick="comfirmTodoUpdate()">Confirmar modificação</button>
           <button class="alternative" onclick="resetTodoForm()">Cancelar modificação</button>
         </div>
 
         <div id="progressFeedback" class="startHidden">
           <progress max="100" id="progress"></progress>
-          <button id="playPauseBtn" class="alternative">
-            Pausar
-          </button>
-          <button id="cancelBtn" class="danger">
-            Cancelar
-          </button>
+          <button id="playPauseBtn" class="alternative">Pausar</button>
+          <button id="cancelBtn" class="danger">Cancelar</button>
         </div>
-
       </div>
-
     </div>
   </div>
 
-  <!-- Recursos do Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-storage.js"></script>
+  <!--Recursos do Firebase-->
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-storage.js"></script>
 
-  <!-- Nossa programação em javascript -->
-  <script src="./js/firebase.js"></script>
-  <script src="./js/utils.js"></script>
-  <script src="./js/auth.js"></script>
-  <script src="./js/todo.js"></script>
+  
+  <!--Nossa programação em JavaScript-->
+  <script src="js/firebase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/todo.js"></script>
 </body>
 </html>

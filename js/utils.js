@@ -1,64 +1,69 @@
-// Definindo referencias para elementos da página
-const authForm = document.getElementById('authForm')
-const authFormTitle = document.getElementById('authFormTitle')
-const register = document.getElementById('register')
-const access = document.getElementById('access')
-const loading = document.getElementById('loading')
-const auth = document.getElementById('auth')
-const userContent = document.getElementById('userContent')
-const userEmail = document.getElementById('userEmail')
-const sendEmailVerificationDiv = document.getElementById('sendEmailVerificationDiv')
-const emailVerified = document.getElementById('emailVerified')
-const passwordReset = document.getElementById('passwordReset')
-const userImg = document.getElementById('userImg')
-const userName = document.getElementById('userName')
-const todoForm = document.getElementById('todoForm')
-const todoCount = document.getElementById('todoCount')
-const ulTodoList = document.getElementById('ulTodoList')
-const search = document.getElementById('search')
-const progressFeedback = document.getElementById('progressFeedback')
-const progress = document.getElementById('progress')
-const playPauseBtn = document.getElementById('playPauseBtn')
-const cancelBtn = document.getElementById('cancelBtn')
-const cancelUpdateTodo = document.getElementById('cancelUpdateTodo')
-const todoFormTitle = document.getElementById('todoFormTitle')
-const submitTodoForm = document.getElementById('submitTodoForm')
+// Definindo referências para elementos da página
+var authForm = document.getElementById('authForm')
+var authFormTitle = document.getElementById('authFormTitle')
+var register = document.getElementById('register')
+var access = document.getElementById('access')
+var loading = document.getElementById('loading')
+var auth = document.getElementById('auth')
+var userContent = document.getElementById('userContent')
+var userEmail = document.getElementById('userEmail')
+var sendEmailVerificationDiv = document.getElementById('sendEmailVerificationDiv')
+var emailVerified = document.getElementById('emailVerified')
+var passwordReset = document.getElementById('passwordReset')
+var userName = document.getElementById('userName')
+var userImg = document.getElementById('userImg')
 
-// Alterar formulario de autenticação para o cadastro de novas contas
+var todoForm = document.getElementById('todoForm')
+var todoCount = document.getElementById('todoCount')
+var ulTodoList = document.getElementById('ulTodoList')
+
+var search = document.getElementById('search')
+
+var progressFeedback = document.getElementById('progressFeedback')
+var progress = document.getElementById('progress')
+
+var playPauseBtn = document.getElementById('playPauseBtn')
+var cancelBtn = document.getElementById('cancelBtn')
+
+var cancelUpdateTodo = document.getElementById('cancelUpdateTodo')
+var todoFormTitle = document.getElementById('todoFormTitle')
+
+// Alterar o formulário de autenticação para o cadastro de novas contas
 function toggleToRegister() {
   authForm.submitAuthForm.innerHTML = 'Cadastrar conta'
   authFormTitle.innerHTML = 'Insira seus dados para se cadastrar'
-  hideItem(register)
-  hideItem(passwordReset)
-  showItem(access)
+  hideItem(register) // Esconder atalho para cadastrar conta
+  hideItem(passwordReset) // Esconder a opção de redefinição de senha
+  showItem(access) // Mostrar atalho para acessar conta
 }
 
-// Alterar formulario de autenticação para o acesso contas já existentes
+// Alterar o formulário de autenticação para o acesso de contas já existentes
 function toggleToAccess() {
   authForm.submitAuthForm.innerHTML = 'Acessar'
   authFormTitle.innerHTML = 'Acesse a sua conta para continuar'
-  hideItem(access)
-  showItem(passwordReset)
-  showItem(register)
+  hideItem(access) // Esconder atalho para acessar conta
+  showItem(passwordReset) // Mostrar a opção de redefinição de senha
+  showItem(register) // Mostrar atalho para cadastrar conta
 }
 
-// Simplifica a execução de elementos da página
+// Simplifica a exibição de elementos da página
 function showItem(element) {
   element.style.display = 'block'
 }
 
-// Simplifica a execução de elementos da página
+// Simplifica a remoção de elementos da página
 function hideItem(element) {
   element.style.display = 'none'
 }
 
+// Mostrar conteúdo para usuários autenticados
 function showUserContent(user) {
   console.log(user)
-  if(user.providerData[0].providerId !== 'password') {
-    emailVerified.innerHTML = 'Autenticação por provedor confiável.'
+  if (user.providerData[0].providerId != 'password') {
+    emailVerified.innerHTML = 'Autenticação por provedor confiável, não é necessário verificar e-mail'
     hideItem(sendEmailVerificationDiv)
   } else {
-    if(user.emailVerified) {
+    if (user.emailVerified) {
       emailVerified.innerHTML = 'E-mail verificado'
       hideItem(sendEmailVerificationDiv)
     } else {
@@ -67,74 +72,73 @@ function showUserContent(user) {
     }
   }
   
-  userImg.src = user.photoURL ? user.photoURL : './img/unknownUser.png'
+  userImg.src = user.photoURL ? user.photoURL : 'img/unknownUser.png'
   userName.innerHTML = user.displayName
   userEmail.innerHTML = user.email
   hideItem(auth)
 
-  getDefaultTodolist()
-  search.onkeyup = () => {
-    if(search.value !== '') {
-      const searchText = search.value.toLowerCase()
+  getDefaultTodoList()
+  search.onkeyup = function() {
+    if (search.value != '') {
+      var searchText = search.value.toLowerCase()
       dbRefUsers.child(user.uid)
-      .orderByChild('nameLowerCase')
-      .startAt(searchText)
-      .endAt(searchText + '\uf8ff')
-      .once('value').then(dataSnapshot => {
+      .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+      .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
+      .once('value').then(function (dataSnapshot) { // Busca tarefas filtradas somente uma vez (once)
         fillTodoList(dataSnapshot)
       })
     } else {
-      getDefaultTodolist()
+      getDefaultTodoList()
     }
   }
 
   showItem(userContent)
 }
 
-// Busca tarefa em tempo real no banco de dados (listagem padrão)
-const getDefaultTodolist = () => {
+// Busca tarefas em tempo real (listagem padrão usando o on)
+function getDefaultTodoList() {
   dbRefUsers.child(firebase.auth().currentUser.uid)
-  .orderByChild('name')
-  .on('value', dataSnapshot => {
+  .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+  .on('value', function (dataSnapshot) {
     fillTodoList(dataSnapshot)
   })
 }
 
+// Mostrar conteúdo para usuários não autenticados
 function showAuth() {
+  authForm.email.value = ''
+  authForm.password.value = ''
   hideItem(userContent)
   showItem(auth)
 }
 
-const actionCodeSettings = {
-  url: 'https://todolist-f0d5d.firebaseapp.com'
-}
-
-const showError = (prefix, error) => {
+// centralizar e traduzir erros
+function showError(prefix, error) {
   console.log(error.code)
   hideItem(loading)
 
-  switch(error.code) {
-    case 'auth/invalid-email': 
-      alert(`${prefix} E-mail ou senha inválidos`)
-      break;
-
-    case 'auth/wrong-password':
-      alert(`${prefix} E-mail ou senha inválidos`)
-      break;
-
-    case 'auth/weak-password':
-      alert(`${prefix} Senha deve ter ao menos 6 caracteres`)
-      break;
-
-    case 'auth/email-already-in-use':
-      alert(`${prefix} E-mail já cadastrado`)
-      break;
-
-    default: alert(`${prefix} ${error.message}`)
-
+  switch (error.code) {
+    case 'auth/invalid-email': alert(prefix + ' ' + 'E-mail inválido!')
+    break;
+    case 'auth/wrong-password': alert(prefix + ' ' + 'Senha inválida!')
+    break;
+    case 'auth/weak-password': alert(prefix + ' ' + 'Senha deve ter ao menos 6 caracteres!')
+    break;
+    case 'auth/email-already-in-use': alert(prefix + ' ' + 'E-mail já está em uso por outra conta!')
+    break;
+    case 'auth/popup-closed-by-user': alert(prefix + ' ' + 'O popup de autenticação foi fechado antes da operação ser concluída!')
+    break;   
+    case 'storage/canceled': 
+    break;
+  
+    default: alert(prefix + ' ' + error.message)
   }
-
 }
 
-const database = firebase.database()
-const dbRefUsers = database.ref('users')
+// Atributos extras de configuração de e-mail
+var actionCodeSettings = {
+  url: 'https://todolist-84473.firebaseapp.com'
+}
+
+var database = firebase.database()
+var dbRefUsers = database.ref('users')
