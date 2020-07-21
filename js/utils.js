@@ -78,15 +78,23 @@ function showUserContent(user) {
   hideItem(auth)
 
   getDefaultTodoList()
+  // Busca tarefas filtradas somente uma vez (once/get)
   search.onkeyup = function() {
     if (search.value != '') {
       var searchText = search.value.toLowerCase()
-      dbRefUsers.child(user.uid)
-      .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-      .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
-      .once('value').then(function (dataSnapshot) { // Busca tarefas filtradas somente uma vez (once)
-        fillTodoList(dataSnapshot)
-      })
+      dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
+        .orderBy('nameLowerCase')
+        .startAt(searchText).endAt(searchText + '\uf8ff')
+        .get().then(function(dataSnapshot) {
+          fillTodoList(dataSnapshot)
+        })
+
+      // dbRefUsers.child(user.uid)
+      // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+      // .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
+      // .once('value').then(function (dataSnapshot) { 
+      //   fillTodoList(dataSnapshot)
+      // })
     } else {
       getDefaultTodoList()
     }
@@ -95,13 +103,18 @@ function showUserContent(user) {
   showItem(userContent)
 }
 
-// Busca tarefas em tempo real (listagem padrão usando o on)
+// Busca tarefas em tempo real (listagem padrão usando o onSnapshot)
 function getDefaultTodoList() {
-  dbRefUsers.child(firebase.auth().currentUser.uid)
-  .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-  .on('value', function (dataSnapshot) {
-    fillTodoList(dataSnapshot)
-  })
+  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
+    .orderBy('nameLowerCase').onSnapshot(function(dataSnapshot) {
+      fillTodoList(dataSnapshot)
+    })
+
+  // dbRefUsers.child(firebase.auth().currentUser.uid)
+  // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+  // .on('value', function (dataSnapshot) {
+  //   fillTodoList(dataSnapshot)
+  // })
 }
 
 // Mostrar conteúdo para usuários não autenticados
@@ -142,3 +155,6 @@ var actionCodeSettings = {
 
 var database = firebase.database()
 var dbRefUsers = database.ref('users')
+
+
+var dbFirestore = firebase.firestore().collection('users')
