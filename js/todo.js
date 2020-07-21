@@ -51,11 +51,18 @@ todoForm.onsubmit = function (event) {
 
 // Completa a criação de tarefas (persiste as informações no banco de dados)
 function completeTodoCreate(data) {
-  dbRefUsers.child(firebase.auth().currentUser.uid).push(data).then(function () {
+  
+  firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection('tarefas').add(data).then(function() {
     console.log('Tarefa "' + data.name + '" adicionada com sucesso')
   }).catch(function (error) {
     showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
   })
+  
+  // dbRefUsers.child(firebase.auth().currentUser.uid).push(data).then(function () {
+  //   console.log('Tarefa "' + data.name + '" adicionada com sucesso')
+  // }).catch(function (error) {
+  //   showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
+  // })
 
   todoForm.name.value = ''
   todoForm.file.value = ''
