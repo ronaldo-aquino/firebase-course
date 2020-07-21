@@ -58,7 +58,7 @@ function hideItem(element) {
 
 // Mostrar conteúdo para usuários autenticados
 function showUserContent(user) {
-  console.log(user)
+  //console.log(user)
   if (user.providerData[0].providerId != 'password') {
     emailVerified.innerHTML = 'Autenticação por provedor confiável, não é necessário verificar e-mail'
     hideItem(sendEmailVerificationDiv)
