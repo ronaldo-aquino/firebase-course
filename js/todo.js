@@ -5,12 +5,12 @@ todoForm.onsubmit = function (event) {
     var file = todoForm.file.files[0] // Seleciona o primeiro aquivo da seleção de aquivos
     if (file != null) { // Verifica se o arquivo foi selecionado
       if (file.type.includes('image')) { // Verifica se o arquivo é uma imagem
-        
+
         if (file.size > 1024 * 1024 * 2) {
-          alert('A imagem não pode ser maior do que 2MB. Imagem selecionada tem: ' + (file.size / 1024 / 1024).toFixed(3) + ' MB' )
+          alert('A imagem não pode ser maior do que 2 MB. Imagem selecionada tem: ' + (file.size / 1024 / 1024).toFixed(3) + ' MB')
           return
         }
-        
+
         // Compõe o nome do arquivo
         var imgName = firebase.database().ref().push().key + '-' + file.name
         // Compõe o caminho do arquivo
@@ -51,17 +51,17 @@ todoForm.onsubmit = function (event) {
 
 // Completa a criação de tarefas (persiste as informações no banco de dados)
 function completeTodoCreate(data) {
-  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas').add(data).then(function() {
+  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas').add(data).then(function () {
     console.log('Tarefa "' + data.name + '" adicionada com sucesso')
   }).catch(function (error) {
     showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
   })
-  
-  // dbRefUsers.child(firebase.auth().currentUser.uid).push(data).then(function () {
-  //   console.log('Tarefa "' + data.name + '" adicionada com sucesso')
-  // }).catch(function (error) {
-  //   showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
-  // })
+
+  /*dbRefUsers.child(firebase.auth().currentUser.uid).push(data).then(function () {
+    console.log('Tarefa "' + data.name + '" adicionada com sucesso')
+  }).catch(function (error) {
+    showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
+  })*/
 
   todoForm.name.value = ''
   todoForm.file.value = ''
@@ -111,14 +111,15 @@ function trackUpload(upload) {
 function fillTodoList(dataSnapshot) {
   ulTodoList.innerHTML = ''
   var num = dataSnapshot.size
-  // var num = dataSnapshot.numChildren()
+  //var num = dataSnapshot.numChildren()
   todoCount.innerHTML = num + (num > 1 ? ' tarefas' : ' tarefa') + ':' // Exibe na interface o número de tarefas
   dataSnapshot.forEach(function (item) { // Percorre todos os elementos
     var value = item.data()
-    // var value = item.val()
+    //var value = item.val()
     var li = document.createElement('li') // Cria um elemento do tipo li
+
     li.id = item.id // Define o id do li como a chave da tarefa
-    // li.id = item.key // Define o id do li como a chave da tarefa
+    //li.id = item.key // Define o id do li como a chave da tarefa
 
     var imgLi = document.createElement('img') // Cria um elemento img
     // Configura src (origem da imagem) como sendo o imgUrl da tarefa
@@ -132,13 +133,13 @@ function fillTodoList(dataSnapshot) {
 
     var liRemoveBtn = document.createElement('button') // Cria um botão para a remoção da tarefa
     liRemoveBtn.appendChild(document.createTextNode('Excluir')) // Define o texto do botão como 'Excluir'
-    liRemoveBtn.setAttribute('onclick', 'removeTodo(\"' + item.id + '\")') // Configura o onclick do botão de remoção de tarefas
+    liRemoveBtn.setAttribute('onclick', 'removeTodo(\"' + /*item.key*/ item.id + '\")') // Configura o onclick do botão de remoção de tarefas
     liRemoveBtn.setAttribute('class', 'danger todoBtn') // Define classes de estilização para o nosso botão de remoção
     li.appendChild(liRemoveBtn) // Adiciona o botão de remoção no li
 
     var liUpdateBtn = document.createElement('button') // Cria um botão para a atualização da tarefa
     liUpdateBtn.appendChild(document.createTextNode('Editar')) // Define o texto do botão como 'Editar'
-    liUpdateBtn.setAttribute('onclick', 'updateTodo(\"' + item.id + '\")') // Configura o onclick do botão de atualização de tarefas
+    liUpdateBtn.setAttribute('onclick', 'updateTodo(\"' + /* item.key */ item.id + '\")') // Configura o onclick do botão de atualização de tarefas
     liUpdateBtn.setAttribute('class', 'alternative todoBtn') // Define classes de estilização para o nosso botão de atualização
     li.appendChild(liUpdateBtn) // Adiciona o botão de atualização no li
 
@@ -159,13 +160,13 @@ function removeTodo(key) {
     }).catch(function (error) {
       showError('Falha ao remover tarefa: ', error)
     })
-
-    // dbRefUsers.child(firebase.auth().currentUser.uid).child(key).remove().then(function () {
-    //   console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
-    //   removeFile(todoImg.src)
-    // }).catch(function (error) {
-    //   showError('Falha ao remover tarefa: ', error)
-    // })
+    
+    /*dbRefUsers.child(firebase.auth().currentUser.uid).child(key).remove().then(function () {
+      console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
+      removeFile(todoImg.src)
+    }).catch(function (error) {
+      showError('Falha ao remover tarefa: ', error)
+    })*/
   }
 }
 
@@ -218,9 +219,10 @@ function comfirmTodoUpdate() {
     if (file != null) { // Verifica se o arquivo foi selecionado
 
       if (file.size > 1024 * 1024 * 2) {
-        alert('A imagem não pode ser maior do que 2MB. Imagem selecionada tem: ' + (file.size / 1024 / 1024).toFixed(3) + ' MB' )
+        alert('A imagem não pode ser maior do que 2 MB. Imagem selecionada tem: ' + (file.size / 1024 / 1024).toFixed(3) + ' MB')
         return
       }
+
       hideItem(cancelUpdateTodo)
 
       if (file.type.includes('image')) { // Verifica se o arquivo é uma imagem
@@ -264,7 +266,7 @@ function comfirmTodoUpdate() {
 
 // Completa a atualização de tarefas (persiste as informações no banco de dados)
 function completeTodoUpdate(data, imgUrl) {
-  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas').doc(updateTodoKey).update(data).then(function() {
+  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas').doc(updateTodoKey).update(data).then(function () {
     console.log('Tarefa "' + data.name + '" atualizada com sucesso')
     if (imgUrl) {
       removeFile(imgUrl) // Remove a imagem antiga
@@ -273,14 +275,14 @@ function completeTodoUpdate(data, imgUrl) {
     showError('Falha ao atualizar tarefa: ', error)
   })
 
-  // dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data).then(function () {
-  //   console.log('Tarefa "' + data.name + '" atualizada com sucesso')
-  //   if (imgUrl) {
-  //     removeFile(imgUrl) // Remove a imagem antiga
-  //   }
-  // }).catch(function (error) {
-  //   showError('Falha ao atualizar tarefa: ', error)
-  // })
+  /*dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data).then(function () {
+    console.log('Tarefa "' + data.name + '" atualizada com sucesso')
+    if (imgUrl) {
+      removeFile(imgUrl) // Remove a imagem antiga
+    }
+  }).catch(function (error) {
+    showError('Falha ao atualizar tarefa: ', error)
+  })*/
 
   resetTodoForm() // Restaura o estado inicial do formulário de tarefas
 }

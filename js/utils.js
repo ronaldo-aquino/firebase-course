@@ -71,7 +71,7 @@ function showUserContent(user) {
       showItem(sendEmailVerificationDiv)
     }
   }
-  
+
   userImg.src = user.photoURL ? user.photoURL : 'img/unknownUser.png'
   userName.innerHTML = user.displayName
   userEmail.innerHTML = user.email
@@ -79,22 +79,22 @@ function showUserContent(user) {
 
   getDefaultTodoList()
   // Busca tarefas filtradas somente uma vez (once/get)
-  search.onkeyup = function() {
+  search.onkeyup = function () {
     if (search.value != '') {
       var searchText = search.value.toLowerCase()
       dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
         .orderBy('nameLowerCase')
         .startAt(searchText).endAt(searchText + '\uf8ff')
-        .get().then(function(dataSnapshot) {
+        .get().then(function (dataSnapshot) {
           fillTodoList(dataSnapshot)
         })
 
-      // dbRefUsers.child(user.uid)
-      // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-      // .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
-      // .once('value').then(function (dataSnapshot) { 
-      //   fillTodoList(dataSnapshot)
-      // })
+      /*dbRefUsers.child(user.uid)
+      .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+      .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
+      .once('value').then(function (dataSnapshot) {
+        fillTodoList(dataSnapshot)
+      })*/
     } else {
       getDefaultTodoList()
     }
@@ -103,18 +103,18 @@ function showUserContent(user) {
   showItem(userContent)
 }
 
-// Busca tarefas em tempo real (listagem padrão usando o onSnapshot)
+// Busca tarefas em tempo real (listagem padrão usando o on/onSnapshot)
 function getDefaultTodoList() {
   dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
-    .orderBy('nameLowerCase').onSnapshot(function(dataSnapshot) {
+    .orderBy('nameLowerCase').onSnapshot(function (dataSnapshot) {
       fillTodoList(dataSnapshot)
     })
 
-  // dbRefUsers.child(firebase.auth().currentUser.uid)
-  // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-  // .on('value', function (dataSnapshot) {
-  //   fillTodoList(dataSnapshot)
-  // })
+  /*dbRefUsers.child(firebase.auth().currentUser.uid)
+  .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+  .on('value', function (dataSnapshot) {
+    fillTodoList(dataSnapshot)
+  })*/
 }
 
 // Mostrar conteúdo para usuários não autenticados
@@ -132,18 +132,20 @@ function showError(prefix, error) {
 
   switch (error.code) {
     case 'auth/invalid-email': alert(prefix + ' ' + 'E-mail inválido!')
-    break;
+      break;
     case 'auth/wrong-password': alert(prefix + ' ' + 'Senha inválida!')
-    break;
+      break;
     case 'auth/weak-password': alert(prefix + ' ' + 'Senha deve ter ao menos 6 caracteres!')
-    break;
+      break;
     case 'auth/email-already-in-use': alert(prefix + ' ' + 'E-mail já está em uso por outra conta!')
-    break;
+      break;
     case 'auth/popup-closed-by-user': alert(prefix + ' ' + 'O popup de autenticação foi fechado antes da operação ser concluída!')
-    break;   
-    case 'storage/canceled': 
-    break;
-  
+      break;
+    case 'storage/canceled':
+      break;
+    case 'storage/unauthorized': alert(prefix + ' ' + 'Falha ao acessar o Cloud Storage!')
+      break;
+
     default: alert(prefix + ' ' + error.message)
   }
 }
@@ -153,8 +155,9 @@ var actionCodeSettings = {
   url: 'https://todolist-84473.firebaseapp.com'
 }
 
+// Referências ao Realtime Database
 var database = firebase.database()
 var dbRefUsers = database.ref('users')
 
-
+// Referência ao Cloud Firestore
 var dbFirestore = firebase.firestore().collection('users')
